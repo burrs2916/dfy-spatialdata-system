@@ -91,7 +91,9 @@ export function registerMapComponents(): void {
       connectable: true,
       embeddable: true,
     },
-    renderer: lazy(() => import("./renderers/CADMapRenderer").then(m => ({ default: m.CADMapRenderer }))),
+    // 暂未实现占位：功能建设中（原渲染器保留在 renderers/CADMapRenderer.tsx，实现后改回下一行即可）
+    renderer: lazy(() => import("./renderers/FeatureNotImplementedRenderer").then(m => ({ default: m.CadMapPlaceholder }))),
+    // renderer: lazy(() => import("./renderers/CADMapRenderer").then(m => ({ default: m.CADMapRenderer }))),
     events: [
       { id: "click", name: "点击" },
       { id: "entityClick", name: "实体点击" },
@@ -218,7 +220,9 @@ export function registerMapComponents(): void {
       connectable: true,
       embeddable: false,
     },
-    renderer: lazy(() => import("./renderers/GlobeMapRenderer").then(m => ({ default: m.GlobeMapRenderer }))),
+    // 暂未实现占位：功能建设中（原渲染器保留在 renderers/GlobeMapRenderer.tsx，实现后改回下一行即可）
+    renderer: lazy(() => import("./renderers/FeatureNotImplementedRenderer").then(m => ({ default: m.GlobePlaceholder }))),
+    // renderer: lazy(() => import("./renderers/GlobeMapRenderer").then(m => ({ default: m.GlobeMapRenderer }))),
     events: [
       { id: "click", name: "点击" },
       { id: "entityClick", name: "实体点击" },
@@ -268,7 +272,9 @@ export function registerMapComponents(): void {
       connectable: true,
       embeddable: false,
     },
-    renderer: lazy(() => import("./renderers/HeatmapMapRenderer").then(m => ({ default: m.HeatmapMapRenderer }))),
+    // 暂未实现占位：功能建设中（原渲染器保留在 renderers/HeatmapMapRenderer.tsx，实现后改回下一行即可）
+    renderer: lazy(() => import("./renderers/FeatureNotImplementedRenderer").then(m => ({ default: m.HeatmapPlaceholder }))),
+    // renderer: lazy(() => import("./renderers/HeatmapMapRenderer").then(m => ({ default: m.HeatmapMapRenderer }))),
     events: [
       { id: "click", name: "点击" },
       { id: "pointClick", name: "数据点点击" },
