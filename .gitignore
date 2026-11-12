@@ -17,7 +17,7 @@ target/
 *~
 
 # Runtime data
-data/
+data/*
 logs/
 *.log
 
@@ -71,3 +71,14 @@ test-carved-playwright.mjs
 visual-compare.mjs
 compare-orig.mjs
 pump-preview.html
+
+# 随仓库走的业务数据（CAD 图库、两张地图、设置与自定义图标配置）。
+# 必须放在文件末尾：gitignore 后出现的规则覆盖前面的 data/*、*.cadbin、config.db；
+# 历史备份 *.bak.* 与 SQLite 临时文件 *-shm/*-wal 无放行条目，继续保持排除。
+!data/app.db
+!data/config.db
+!data/dwg_ai_viewer.db
+!data/map_libraries/
+!data/map_libraries/**
+!data/thumbnails/
+!data/thumbnails/**
