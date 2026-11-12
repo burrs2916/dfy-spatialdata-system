@@ -4,7 +4,7 @@
 export LANG=zh_CN.UTF-8
 export LC_ALL=zh_CN.UTF-8
 
-# SpatialData System 启动脚本
+# dfy-spatialdata-system 启动脚本
 
 # 设置颜色输出
 RED='\033[0;31m'
@@ -27,7 +27,7 @@ VITE_PORT=1422
 # 进程名称标识
 VITE_PROCESS="vite"
 TAURI_PROCESS="tauri"
-APP_PROCESS="SpatialData System"
+APP_PROCESS="dfy-spatialdata-system"
 
 # 日志函数
 log_info() {
@@ -114,12 +114,12 @@ stop_vite() {
 # 查找并停止 Tauri 进程
 stop_tauri() {
     log_info "正在查找 Tauri 相关进程..."
-    TAURI_PIDS=$(pgrep -f "tauri" 2>/dev/null || true)
+    TAURI_PIDS=$(pgrep -f "dfy-spatialdata-system/node_modules.*tauri" 2>/dev/null || true)
     if [ ! -z "$TAURI_PIDS" ]; then
         log_warn "发现 Tauri 进程，正在停止..."
         kill -TERM $TAURI_PIDS 2>/dev/null
         sleep 2
-        REMAINING_PIDS=$(pgrep -f "tauri" 2>/dev/null || true)
+        REMAINING_PIDS=$(pgrep -f "dfy-spatialdata-system/node_modules.*tauri" 2>/dev/null || true)
         if [ ! -z "$REMAINING_PIDS" ]; then
             log_warn "强制停止 Tauri 进程..."
             kill -9 $REMAINING_PIDS 2>/dev/null
@@ -133,12 +133,12 @@ stop_tauri() {
 # 查找并停止应用进程
 stop_app() {
     log_info "正在查找应用进程..."
-    APP_PIDS=$(pgrep -f "SpatialData" 2>/dev/null || true)
+    APP_PIDS=$(pgrep -f "dfy-spatialdata-system|鼎飞益" 2>/dev/null || true)
     if [ ! -z "$APP_PIDS" ]; then
         log_warn "发现应用进程，正在停止..."
         kill -TERM $APP_PIDS 2>/dev/null
         sleep 2
-        REMAINING_PIDS=$(pgrep -f "SpatialData" 2>/dev/null || true)
+        REMAINING_PIDS=$(pgrep -f "dfy-spatialdata-system|鼎飞益" 2>/dev/null || true)
         if [ ! -z "$REMAINING_PIDS" ]; then
             log_warn "强制停止应用进程..."
             kill -9 $REMAINING_PIDS 2>/dev/null
@@ -169,7 +169,7 @@ pre_check() {
 
 # 启动开发模式（前后端同时启动）
 start_dev() {
-    log_info "SpatialData System 开发模式启动脚本"
+    log_info "dfy-spatialdata-system 开发模式启动脚本"
     echo "========================================"
     
     # 前置检查
@@ -194,7 +194,7 @@ start_dev() {
 
 # 构建项目
 build_project() {
-    log_info "正在构建 SpatialData System..."
+    log_info "正在构建 dfy-spatialdata-system..."
     
     # 前置检查
     pre_check
@@ -216,7 +216,7 @@ build_project() {
 
 # 构建 Tauri 应用
 build_tauri() {
-    log_info "正在构建 SpatialData System Tauri 应用..."
+    log_info "正在构建 dfy-spatialdata-system Tauri 应用..."
     
     # 前置检查
     pre_check
@@ -237,14 +237,14 @@ build_tauri() {
 
 # 停止服务
 stop_services() {
-    log_info "SpatialData System 停止脚本"
+    log_info "dfy-spatialdata-system 停止脚本"
     echo "========================================"
     stop_all_processes
 }
 
 # 显示帮助信息
 show_help() {
-    echo "SpatialData System 管理脚本"
+    echo "dfy-spatialdata-system 管理脚本"
     echo ""
     echo "用法: $0 [选项]"
     echo ""
@@ -275,12 +275,12 @@ main() {
             stop_services
             ;;
         build)
-            log_info "SpatialData System 构建脚本"
+            log_info "dfy-spatialdata-system 构建脚本"
             echo "========================================"
             build_project
             ;;
         build-tauri)
-            log_info "SpatialData System Tauri 应用构建脚本"
+            log_info "dfy-spatialdata-system Tauri 应用构建脚本"
             echo "========================================"
             build_tauri
             ;;
