@@ -4,8 +4,16 @@ version = "0.1.0"
 description = "dfy-spatialdata-system desktop application"
 authors = ["you"]
 edition = "2021"
-# 与 `[[bin]] dwg_diag` 并存时，需显式指定 `cargo run` 的默认目标，否则 Tauri 开发模式会报无法选择二进制。
+# 关闭 src/bin/* 诊断工具的自动构建：这些是开发期排查工具，不属应用交付物。
+# 不关掉的话 macOS universal 打包必失败——tauri 只 lipo 主程序，却要按 cargo
+# 元数据把全部 19 个 bin 拷进 .app（`dwg_diag does not exist`，即原项目当年
+# 砍 macOS 构建的真实原因），Windows/Linux 侧还会把它们塞进安装包。
+autobins = false
 default-run = "dfy-spatialdata-system"
+
+[[bin]]
+name = "dfy-spatialdata-system"
+path = "src/main.rs"
 
 [lib]
 name = "dfy_spatialdata_system_lib"
@@ -39,39 +47,3 @@ urlencoding = "2"
 
 acadrust = "0.3"
 encoding_rs = "0.8"
-
-[[bin]]
-name = "dwg_diag"
-path = "src/bin/dwg_diag.rs"
-
-[[bin]]
-name = "dwg_hatch_text_diag"
-path = "src/bin/dwg_hatch_text_diag.rs"
-
-[[bin]]
-name = "dwg_multi_diag"
-path = "src/bin/dwg_multi_diag.rs"
-
-[[bin]]
-name = "dwg_mtext_raw"
-path = "src/bin/dwg_mtext_raw.rs"
-
-[[bin]]
-name = "dwg_4file_compare"
-path = "src/bin/dwg_4file_compare.rs"
-
-[[bin]]
-name = "dwg_batch_analyzer"
-path = "src/bin/dwg_batch_analyzer.rs"
-
-[[bin]]
-name = "dwg_deep_profile"
-path = "src/bin/dwg_deep_profile.rs"
-
-[[bin]]
-name = "dwg_shajihai_diag"
-path = "src/bin/dwg_shajihai_diag.rs"
-
-[[bin]]
-name = "dwg_verify_normalize"
-path = "src/bin/dwg_verify_normalize.rs"
