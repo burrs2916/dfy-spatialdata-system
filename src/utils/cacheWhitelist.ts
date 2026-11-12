@@ -1,5 +1,12 @@
 const ALLOWED_CACHE_KEYS: string[] = [
   "icon-settings",
+  // 跨窗口共享的登录态（authStore 子窗口恢复用）
+  "auth_current_user",
+  // 以下为功能键，需跨启动/跨窗口保留（否则被卫生清理误删导致功能失效）：
+  "__device_filter_version__", // 设备过滤版本号（deviceStore 跨启动检测变更）
+  "iconpicker_recent_v1", // 图标选择器「最近使用」
+  "ai-assistant-active-model", // AI 助手当前模型
+  "ai-assistant-active-agent", // AI 助手当前智能体
 ];
 
 const DYNAMIC_KEY_PATTERNS: RegExp[] = [

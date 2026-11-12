@@ -2,6 +2,26 @@ import { create } from "zustand";
 import type { AuthConfig, AuthPreset, ApiEndpoint, HeaderConfig, AuthParam, UserDisplayConfig } from "../services/tauri";
 import { authApi, AUTH_PRESETS } from "../services/tauri";
 import { cleanupDisallowedKeys, registerDynamicKey } from "../utils/cacheWhitelist";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+
+/** 跨窗口共享的登录态键（用户信息，非 token）：子窗口启动时据此恢复 currentUser */
+const CURRENT_USER_KEY = "auth_current_user";
+
+/**
+ * 是否主窗口。登录态由主窗口维护：
+ * - 主窗口：启动时执行「重启清理」（清 token / 缓存 / 登录态）。
+ * - 子窗口（预览 / 编辑等独立窗口）：共享同一 localStorage，属于主窗口会话，
+ *   只恢复登录态、绝不清理——否则子窗口一启动就把主窗口刚登录的信息抹掉，
+ *   导致预览窗口提示「该页面需要登录」（登录态无法跨窗口同步的根因）。
+ * 浏览器等无 Tauri 上下文的环境按主窗口处理。
+ */
+function isMainWindow(): boolean {
+  try {
+    return getCurrentWindow().label === "main";
+  } catch {
+    return true;
+  }
+}
 
 interface WebhookConfig {
   baseUrl: string;
@@ -243,7 +263,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   init: async () => {
     try {
-      // 系统重启时首先清空所有缓存和状态
+      if (isMainWindow()) {
+      // 主窗口：系统重启时首先清空所有缓存和状态
       get().clearAllTokens();
       get().clearAllCachedValues();
       get().clearCurrentUser();
@@ -307,6 +328,19 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         isRefreshing: false,
         refreshStatus: null,
       });
+      } else {
+        // 子窗口（预览 / 编辑等独立窗口）：localStorage 属于主窗口会话，
+        // 绝不做重启清理，只恢复主窗口登录时写入的用户信息，
+        // 让 ConfigGate 在子窗口里也认得已登录状态
+        try {
+          const raw = typeof window !== "undefined" ? window.localStorage?.getItem(CURRENT_USER_KEY) : null;
+          if (raw) {
+            set({ currentUser: JSON.parse(raw) });
+          }
+        } catch {
+          // 恢复失败按未登录处理（ConfigGate 会正常提示登录）
+        }
+      }
       
       const config = await authApi.getConfig();
       
@@ -361,7 +395,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         whitelist: Array.isArray(config.whitelist) ? config.whitelist : ["/login", "/public/*"],
       });
 
-      cleanupDisallowedKeys();
+      // 卫生清理只在主窗口执行：共享 localStorage 属于主窗口会话，
+      // 子窗口（预览/编辑）启动时做清理会把主窗口的键误删——
+      // 如组件预览配置、auth 自定义缓存键（expiresTime 等）、最近图标、设备过滤版本号
+      if (isMainWindow()) {
+        cleanupDisallowedKeys();
+      }
     } catch (error) {
       console.error("[authStore] Failed to initialize:", error);
       // 即使初始化失败也要设置 initialized 为 true，防止界面一直加载
@@ -463,9 +502,28 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     });
   },
 
-  setCurrentUser: (user) => set({ currentUser: user }),
+  setCurrentUser: (user) => {
+    set({ currentUser: user });
+    // 同步写入共享存储，供预览 / 编辑等子窗口启动时恢复登录态
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        if (user) {
+          localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+        } else {
+          localStorage.removeItem(CURRENT_USER_KEY);
+        }
+      }
+    } catch { /* 持久化失败不影响内存态 */ }
+  },
 
-  clearCurrentUser: () => set({ currentUser: undefined }),
+  clearCurrentUser: () => {
+    set({ currentUser: undefined });
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        localStorage.removeItem(CURRENT_USER_KEY);
+      }
+    } catch { /* 忽略 */ }
+  },
 
   reset: async () => {
     await authApi.resetConfig();
