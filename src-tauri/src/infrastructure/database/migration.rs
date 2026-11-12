@@ -4573,7 +4573,7 @@ fn seed_data_sources(conn: &Connection) -> Result<(), rusqlite::Error> {
             "database",
             "",
             1,
-            r##"{"url":"","headers":[],"timeout":10000,"database":{"dbType":"redis","host":"localhost","port":6379,"username":"","password":"","database":"","options":{}},"databaseTest":{"query":"PING"}}"##,
+            r##"{"url":"","headers":[],"timeout":10000,"database":{"dbType":"redis","host":"192.168.56.101","port":6379,"username":"","password":"dfy123456","database":"","options":{}},"databaseTest":{"query":"PING"}}"##,
             now,
         ],
     )?;
@@ -4588,7 +4588,7 @@ fn seed_data_sources(conn: &Connection) -> Result<(), rusqlite::Error> {
             "database",
             "",
             1,
-            r##"{"url":"mqtt://127.0.0.1:18830","headers":[],"timeout":10000,"database":{"dbType":"greptimedb","connectionMode":"http-sql","host":"localhost","port":4000,"username":"","password":"","database":"public","options":{}},"databaseTest":{"query":"SELECT 1"}}"##,
+            r##"{"url":"","headers":[],"timeout":10000,"database":{"dbType":"greptimedb","connectionMode":"http-sql","host":"localhost","port":4000,"username":"","password":"","database":"public","options":{}},"databaseTest":{"query":"SELECT 1"}}"##,
             now,
         ],
     )?;
@@ -4603,7 +4603,7 @@ fn seed_data_sources(conn: &Connection) -> Result<(), rusqlite::Error> {
             "mqtt",
             "",
             1,
-            r##"{"url":"tcp://127.0.0.1:18830","headers":[],"timeout":10000,"mqtt":{"protocol":"mqtt","host":"localhost","port":18830,"username":"Test","password":"test","clientId":"edgeview_3m1tefyg","keepAlive":60,"cleanSession":true,"version":"3.1.1","reconnect":true,"reconnectInterval":5000,"reconnectAttempts":10}}"##,
+            r##"{"url":"tcp://192.168.56.101:18830","headers":[],"timeout":10000,"mqtt":{"protocol":"mqtt","host":"192.168.56.101","port":18830,"username":"cloud","password":"key@00","clientId":"edgeview_3m1tefyg","keepAlive":60,"cleanSession":true,"version":"3.1.1","reconnect":true,"reconnectInterval":5000,"reconnectAttempts":10}}"##,
             now,
         ],
     )?;
@@ -4618,7 +4618,7 @@ fn seed_data_sources(conn: &Connection) -> Result<(), rusqlite::Error> {
             "database",
             "",
             1,
-            r##"{"url":"","headers":[],"timeout":10000,"database":{"dbType":"mysql","host":"localhost","port":3306,"username":"root","password":"lili@112357","database":"dfy-test-db","options":{}},"databaseTest":{"query":"SELECT 1"}}"##,
+            r##"{"url":"","headers":[],"timeout":10000,"database":{"dbType":"mysql","host":"localhost","port":3306,"username":"root","password":"dfy123456","database":"dfy_base_db","options":{}},"databaseTest":{"query":"SELECT 1"}}"##,
             now,
         ],
     )?;
@@ -4633,7 +4633,7 @@ fn seed_data_sources(conn: &Connection) -> Result<(), rusqlite::Error> {
             "database",
             "",
             1,
-            r##"{"url":"","headers":[],"timeout":10000,"database":{"dbType":"postgresql","host":"localhost","port":5432,"username":"burrs","password":"123456","database":"burrs_cloud","options":{}},"databaseTest":{"query":"SELECT 1"}}"##,
+            r##"{"url":"","headers":[],"timeout":10000,"database":{"dbType":"postgresql","host":"localhost","port":5432,"username":"dfy","password":"dfy123456","database":"dfy_cloud","options":{}},"databaseTest":{"query":"SELECT 1"}}"##,
             now,
         ],
     )?;
