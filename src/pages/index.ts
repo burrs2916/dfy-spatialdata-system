@@ -1,0 +1,16 @@
+export { default as DashboardPage } from "./DashboardPage";
+export { default as SceneEditorPage } from "./SceneEditorPage";
+export { default as DataSourcePage } from "./DataSourcePage";
+export { default as PublishedScenesPage } from "./PublishedScenesPage";
+export { default as ScenePreviewPage } from "./ScenePreviewPage";
+export { default as ComponentManagementPage } from "./ComponentManagementPage";
+export { default as ComponentPreviewPage } from "./ComponentPreviewPage";
+export { default as MapLibraryPage } from "./MapLibraryPage";
+export { default as MapEditorPage } from "./MapEditorPage";
+export { default as MapsPage } from "./MapsPage";
+export { default as MapPreviewPage } from "./MapPreviewPage";
+export { default as AlertCenterPage } from "./AlertCenterPage";
+export { default as LogsPage } from "./LogsPage";
+export { default as HistoryPage } from "./HistoryPage";
+export { default as AboutPage } from "./AboutPage";
+export { default as HelpPage } from "./HelpPage";
