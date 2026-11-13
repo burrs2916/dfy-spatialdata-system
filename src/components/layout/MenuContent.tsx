@@ -30,6 +30,8 @@ interface MenuItemDef {
   text: string;
   icon: React.ReactNode;
   path: string;
+  /** 功能建设中（暂未开发）：入口保留但置灰禁点，名下显示「暂未开发」提示 */
+  comingSoon?: boolean;
 }
 
 interface MenuGroupDef {
@@ -52,7 +54,7 @@ const menuGroups: MenuGroupDef[] = [
     id: "published",
     label: "发布管理",
     items: [
-      { text: "地图浏览", icon: <MapRoundedIcon />, path: "/maps" },
+      { text: "地图浏览", icon: <MapRoundedIcon />, path: "/maps", comingSoon: true },
       { text: "已发布场景", icon: <PublicRoundedIcon />, path: "/published" },
     ],
   },
@@ -107,6 +109,7 @@ export default function MenuContent({ collapsed = false }: MenuContentProps) {
       <ListItem key={`${item.path}-${index}`} disablePadding sx={{ display: "block" }}>
         <ListItemButton
           selected={isSelected}
+          disabled={!!item.comingSoon}
           onClick={() => {
             if (GATED_PATHS.has(item.path)) {
               requireConfigAccess(() => navigate(item.path));
@@ -120,6 +123,11 @@ export default function MenuContent({ collapsed = false }: MenuContentProps) {
             minHeight: collapsed ? 48 : 40,
             justifyContent: collapsed ? "center" : "flex-start",
             px: collapsed ? 1.5 : 2,
+            // 暂未开发：置灰遮盖，禁点（入口保留）
+            "&.Mui-disabled": {
+              opacity: 0.45,
+              color: "text.disabled",
+            },
             "&.Mui-selected": {
               backgroundColor: (theme) =>
                 theme.vars
@@ -147,10 +155,17 @@ export default function MenuContent({ collapsed = false }: MenuContentProps) {
           {!collapsed && (
             <ListItemText
               primary={item.text}
+              secondary={item.comingSoon ? "暂未开发" : undefined}
               sx={{
                 "& .MuiListItemText-primary": {
                   fontWeight: isSelected ? 600 : 400,
                   fontSize: "0.875rem",
+                },
+                "& .MuiListItemText-secondary": {
+                  fontSize: "0.625rem",
+                  lineHeight: 1.3,
+                  mt: 0,
+                  color: "text.disabled",
                 },
               }}
             />
@@ -161,7 +176,7 @@ export default function MenuContent({ collapsed = false }: MenuContentProps) {
 
     if (collapsed) {
       return (
-        <Tooltip key={`${item.path}-${index}`} title={item.text} placement="right">
+        <Tooltip key={`${item.path}-${index}`} title={item.comingSoon ? `${item.text}（暂未开发）` : item.text} placement="right">
           {menuItem}
         </Tooltip>
       );

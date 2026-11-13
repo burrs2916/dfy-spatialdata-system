@@ -91,9 +91,7 @@ export function registerMapComponents(): void {
       connectable: true,
       embeddable: true,
     },
-    // 暂未实现占位：功能建设中（原渲染器保留在 renderers/CADMapRenderer.tsx，实现后改回下一行即可）
-    renderer: lazy(() => import("./renderers/FeatureNotImplementedRenderer").then(m => ({ default: m.CadMapPlaceholder }))),
-    // renderer: lazy(() => import("./renderers/CADMapRenderer").then(m => ({ default: m.CADMapRenderer }))),
+    renderer: lazy(() => import("./renderers/CADMapRenderer").then(m => ({ default: m.CADMapRenderer }))),
     events: [
       { id: "click", name: "点击" },
       { id: "entityClick", name: "实体点击" },
@@ -202,6 +200,7 @@ export function registerMapComponents(): void {
     version: "1.0.0",
     builtIn: true,
     enabled: true,
+    comingSoon: true,
     layerType: "spatial",
     defaultSize: { width: 800, height: 600 },
     defaultConfig: {
@@ -256,6 +255,7 @@ export function registerMapComponents(): void {
     version: "1.0.0",
     builtIn: true,
     enabled: true,
+    comingSoon: true,
     layerType: "spatial",
     defaultSize: { width: 800, height: 600 },
     defaultConfig: {

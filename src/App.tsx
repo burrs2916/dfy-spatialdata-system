@@ -6,8 +6,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AppTheme } from "./theme";
 import { SideMenu, AppNavbar, AppFooter, SettingsDrawer } from "./components/layout";
 import FeaturePlaceholder from "./components/FeaturePlaceholder";
-// 地图浏览 / 图库管理：功能建设中，路由暂指向占位页（MapsPage、MapLibraryPage 代码保留未删）
-import { DashboardPage, SceneEditorPage, DataSourcePage, PublishedScenesPage, ScenePreviewPage, ComponentManagementPage, ComponentPreviewPage, MapPreviewPage, AlertCenterPage, LogsPage, HistoryPage, AboutPage, HelpPage } from "./pages";
+// 地图浏览：功能建设中，路由暂指向占位页（MapsPage 代码保留未删）
+import { DashboardPage, SceneEditorPage, DataSourcePage, PublishedScenesPage, ScenePreviewPage, ComponentManagementPage, ComponentPreviewPage, MapLibraryPage, MapPreviewPage, AlertCenterPage, LogsPage, HistoryPage, AboutPage, HelpPage } from "./pages";
 import { useLayoutStore } from "./store/layoutStore";
 import { useAuthStore } from "./store/authStore";
 import { useDataSourceStore } from "./store/datasourceStore";
@@ -152,8 +152,8 @@ function AppLayout({ setSettingsOpen }: { setSettingsOpen: (v: boolean) => void 
                 <Route path="/datasource" element={<ConfigGate><DataSourcePage /></ConfigGate>} />
                 <Route path="/published" element={<PublishedScenesPage />} />
                 <Route path="/components" element={<ConfigGate><ComponentManagementPage /></ConfigGate>} />
-                {/* 入口保留：以下两页功能建设中，暂指向专业占位页（原页面代码未删，恢复时改回引用即可） */}
-                <Route path="/map-library" element={<ConfigGate><FeaturePlaceholder title="图库管理" /></ConfigGate>} />
+                {/* 入口保留：地图浏览功能建设中，暂指向专业占位页（原页面代码未删，恢复时改回引用即可） */}
+                <Route path="/map-library" element={<ConfigGate><MapLibraryPage /></ConfigGate>} />
                 <Route path="/maps" element={<FeaturePlaceholder title="地图浏览" />} />
                 <Route path="/alerts" element={<AlertCenterPage />} />
                 <Route path="/logs" element={<LogsPage />} />

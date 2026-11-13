@@ -333,6 +333,8 @@ export const ComponentGridCard = memo(function ComponentGridCard({ definition, o
     && !(iconOverride && iconOverride.startsWith("material:")))
     || defIconIsThumbnail;
 
+  const comingSoon = definition.comingSoon === true;
+
   const handleDragStart = useCallback((e: React.DragEvent) => {
     e.dataTransfer.setData("application/x-component-type", definition.type);
     e.dataTransfer.effectAllowed = "copy";
@@ -344,10 +346,14 @@ export const ComponentGridCard = memo(function ComponentGridCard({ definition, o
   }, [definition, onClick]);
 
   return (
-    <Tooltip title={displayDescription || displayName} arrow placement="top">
+    <Tooltip
+      title={comingSoon ? `${displayName}（暂未开发）` : displayDescription || displayName}
+      arrow
+      placement="top"
+    >
       <Paper
-        draggable
-        onDragStart={handleDragStart}
+        draggable={!comingSoon}
+        onDragStart={comingSoon ? undefined : handleDragStart}
         onClick={handleClick}
         sx={{
           p: 1,
@@ -356,19 +362,21 @@ export const ComponentGridCard = memo(function ComponentGridCard({ definition, o
           alignItems: "center",
           gap: 0.5,
           borderRadius: 1,
-          cursor: "grab",
+          cursor: comingSoon ? "default" : "grab",
+          // 功能建设中：整体置灰遮盖、禁用拖拽与悬停放大（入口保留不隐藏）
+          opacity: comingSoon ? 0.45 : 1,
           border: "1px solid",
           borderColor: "divider",
           overflow: "hidden",
           transition: "all 0.15s",
           "&:hover": {
-            bgcolor: "action.hover",
-            borderColor: "primary.main",
-            transform: "scale(1.05)",
+            bgcolor: comingSoon ? "transparent" : "action.hover",
+            borderColor: comingSoon ? "divider" : "primary.main",
+            transform: comingSoon ? "none" : "scale(1.05)",
           },
           "&:active": {
-            cursor: "grabbing",
-            transform: "scale(0.98)",
+            cursor: comingSoon ? "default" : "grabbing",
+            transform: comingSoon ? "none" : "scale(0.98)",
           },
         }}
       >
@@ -410,6 +418,24 @@ export const ComponentGridCard = memo(function ComponentGridCard({ definition, o
         >
           {displayName}
         </Typography>
+        {comingSoon && (
+          <Typography
+            variant="caption"
+            sx={{
+              fontSize: 9,
+              lineHeight: 1.2,
+              fontWeight: 600,
+              color: "text.disabled",
+              border: "1px dashed",
+              borderColor: "divider",
+              borderRadius: 0.5,
+              px: 0.75,
+              py: 0.15,
+            }}
+          >
+            暂未开发
+          </Typography>
+        )}
       </Paper>
     </Tooltip>
   );

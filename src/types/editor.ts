@@ -255,6 +255,11 @@ export interface ComponentDefinition {
   dataSchema?: DataSchema;
   builtIn?: boolean;
   enabled?: boolean;
+  /**
+   * 功能建设中（暂未开发）：组件面板中保留入口但置灰、不可拖入画布，
+   * 卡片名称下方显示「暂未开发」提示。不隐藏，仅禁用交互。
+   */
+  comingSoon?: boolean;
   layerType?: 'spatial' | 'overlay' | 'widget';
   /**
    * 标记组件是"操作型"（强喷/强停/视频播放/定时控制等），
