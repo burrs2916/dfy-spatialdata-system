@@ -54,7 +54,7 @@ const menuGroups: MenuGroupDef[] = [
     id: "published",
     label: "发布管理",
     items: [
-      { text: "地图浏览", icon: <MapRoundedIcon />, path: "/maps", comingSoon: true },
+      { text: "地图浏览", icon: <MapRoundedIcon />, path: "/maps" },
       { text: "已发布场景", icon: <PublicRoundedIcon />, path: "/published" },
     ],
   },
