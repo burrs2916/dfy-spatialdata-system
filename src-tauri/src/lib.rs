@@ -37,6 +37,9 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_notification::init())
         .setup(|app| {
+            // 出厂数据先落位（resources 里的 data/ → 生产读写位置），再开库——
+            // 否则首跑建出空库，图库管理/默认 CAD 图纸就是空的。
+            seed_packaged_data(app);
             let db = Database::new(app.handle()).expect("Failed to initialize database");
 
             {
@@ -262,4 +265,62 @@ pub fn run() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+/// 出厂数据首跑落位（仅生产包；dev 直接读仓库 data/ 不需要）：
+/// 安装包 resources 携带的 data/（当前仓库的数据库、CAD 地图库、缩略图）
+/// 拷到程序实际读写的位置——装完第一次打开即带现有数据。
+/// 只补缺失、不覆盖：已存在的目标一律保留（不毁用户后续产生的数据）。
+fn seed_packaged_data(app: &tauri::App) {
+    if cfg!(debug_assertions) {
+        return;
+    }
+    let seed = match app.path().resource_dir() {
+        Ok(dir) => dir.join("data"),
+        Err(_) => return,
+    };
+    if !seed.is_dir() {
+        return;
+    }
+
+    // 1) config.db / app.db → exe 同级（connection.rs 生产读取位置）
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(exe_dir) = exe.parent() {
+            for db in ["config.db", "app.db"] {
+                let (s, t) = (seed.join(db), exe_dir.join(db));
+                if s.is_file() && !t.exists() {
+                    let _ = std::fs::copy(&s, &t);
+                }
+            }
+        }
+    }
+
+    // 2) map_libraries / thumbnails → app_data_dir（map_library.rs 生产读取位置）
+    if let Ok(app_data) = app.path().app_data_dir() {
+        let _ = std::fs::create_dir_all(&app_data);
+        for name in ["map_libraries", "thumbnails"] {
+            let (s, t) = (seed.join(name), app_data.join(name));
+            if s.is_dir() && !t.exists() {
+                let _ = copy_dir_recursive(&s, &t);
+            }
+        }
+    }
+}
+
+/// 递归拷贝目录（std 无内置实现）。
+fn copy_dir_recursive(
+    src: &std::path::Path,
+    dst: &std::path::Path,
+) -> std::io::Result<()> {
+    std::fs::create_dir_all(dst)?;
+    for entry in std::fs::read_dir(src)? {
+        let entry = entry?;
+        let to = dst.join(entry.file_name());
+        if entry.file_type()?.is_dir() {
+            copy_dir_recursive(&entry.path(), &to)?;
+        } else {
+            std::fs::copy(entry.path(), to)?;
+        }
+    }
+    Ok(())
 }
