@@ -309,10 +309,7 @@ fn seed_packaged_data(app: &tauri::App) {
 }
 
 /// 递归拷贝目录（std 无内置实现）。
-fn copy_dir_recursive(
-    src: &std::path::Path,
-    dst: &std::path::Path,
-) -> std::io::Result<()> {
+fn copy_dir_recursive(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
     std::fs::create_dir_all(dst)?;
     for entry in std::fs::read_dir(src)? {
         let entry = entry?;
