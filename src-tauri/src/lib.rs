@@ -295,10 +295,11 @@ fn seed_packaged_data(app: &tauri::App) {
         }
     }
 
-    // 2) map_libraries / thumbnails → app_data_dir（map_library.rs 生产读取位置）
+    // 2) map_libraries / thumbnails / icons / backgrounds → app_data_dir
+    //    （map_library.rs、icons.rs、外观背景的生产读取位置）
     if let Ok(app_data) = app.path().app_data_dir() {
         let _ = std::fs::create_dir_all(&app_data);
-        for name in ["map_libraries", "thumbnails"] {
+        for name in ["map_libraries", "thumbnails", "icons", "backgrounds"] {
             let (s, t) = (seed.join(name), app_data.join(name));
             if s.is_dir() && !t.exists() {
                 let _ = copy_dir_recursive(&s, &t);

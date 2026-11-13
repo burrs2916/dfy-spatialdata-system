@@ -82,6 +82,10 @@ pump-preview.html
 !data/map_libraries/**
 !data/thumbnails/
 !data/thumbnails/**
+!data/icons/
+!data/icons/**
+!data/backgrounds/
+!data/backgrounds/**
 
 # tsc -b 增量构建产物
 *.tsbuildinfo
